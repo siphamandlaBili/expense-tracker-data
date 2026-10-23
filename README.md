@@ -75,7 +75,7 @@ The app checks these at startup and fails with a clear message if
 - **Database connection:** one shared client per function instance, opened on
   the first request that needs it.
 - **Hardening:** input validated with zod (400 with the reason), JSON bodies
-  limited to 10 KB, security headers (helmet), `Cache-Control: no-store`,
+  limited to 10 KB, `X-Content-Type-Options: nosniff`, `Cache-Control: no-store`,
   CORS open to any origin (a public demo with no cookies), and unexpected errors logged but returned as
   a generic 500.
 

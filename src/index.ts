@@ -1,6 +1,5 @@
 import cors from "cors";
 import express from "express";
-import helmet from "helmet";
 import { loadConfig } from "./config.js";
 import { findUser } from "./data/fixtures.js";
 import { getDb } from "./db.js";
@@ -19,8 +18,8 @@ const goals = createMongoGoalsRepository(
 );
 
 const app = express();
+app.disable("x-powered-by");
 
-app.use(helmet());
 // Any origin may call the API: it is a public demo and uses no cookies.
 app.use(
   cors({
@@ -31,9 +30,13 @@ app.use(
   }),
 );
 app.use(express.json({ limit: "10kb" }));
-// Customer data: never cached by browsers or proxies.
+// Customer data: never cached by browsers or proxies, and never sniffed as
+// anything but JSON.
 app.use((_request, response, next) => {
-  response.set("Cache-Control", "no-store");
+  response.set({
+    "Cache-Control": "no-store",
+    "X-Content-Type-Options": "nosniff",
+  });
   next();
 });
 
