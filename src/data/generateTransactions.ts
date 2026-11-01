@@ -1,6 +1,7 @@
 import type { Transaction } from "../schemas.js";
 import { addUtcDays, DAY_MS, startOfUtcDay } from "./dates.js";
 import { categoriesFixture, merchantsByCategory } from "./fixtures.js";
+import { seededTransactions } from "./seededTransactions.js";
 
 /** Days of history to generate: enough for the 24-month trends maximum. */
 export const HISTORY_DAYS = 760;
@@ -74,5 +75,7 @@ export function generateTransactions(now: Date): Transaction[] {
     }
   }
 
-  return transactions.sort((a, b) => b.date.localeCompare(a.date));
+  return [...transactions, ...seededTransactions(now)].sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
 }
